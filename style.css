@@ -1,0 +1,21 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    font-family: Arial, sans-serif;
+}
+
+#preloader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    background-color: #282c34; /* Цвет фона */
+    color: white;
+    font-size: 2em;
+}
+
+#content {
+    text-align: center;
+    padding-top: 50px;
+}
