@@ -1,9 +1,11 @@
-window.addEventListener("load", function() {
-    const preloader = document.getElementById("preloader");
-    const content = document.getElementById("content");
+let percentage = 0;
+let interval = setInterval(() => {
+    percentage += 1;
+    document.getElementById("loading-text").innerText = `${percentage}%`;
 
-    setTimeout(function() {
-        preloader.style.display = "none"; // Скрыть прелоадер
-        content.style.display = "block";  // Показать контент
-    }, 3000); // Ожидание 3 секунды (можно изменить)
-});
+    if (percentage === 100) {
+        clearInterval(interval);
+        document.getElementById("preloader").style.display = 'none'; // Прячем предзагрузчик
+        document.getElementById("content").style.display = 'flex';  // Показываем основной контент
+    }
+}, 50); // Обновление прогресса каждые 50 миллисекунд

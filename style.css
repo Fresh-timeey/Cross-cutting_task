@@ -1,21 +1,64 @@
-body, html {
+/* Сброс стилей */
+* {
     margin: 0;
     padding: 0;
-    height: 100%;
-    font-family: Arial, sans-serif;
+    box-sizing: border-box;
 }
 
+/* Стиль для предзагрузчика */
 #preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+   /*background-color: rgba(255, 255, 255, 0.9);*/
+
+
+   background-image: url('phone.png');  /* Указываем путь к изображению */
+    background-size: cover; /* Изображение растягивается на весь экран */
+    background-position: center; /* Центрируем изображение */
+
+
     display: flex;
-    align-items: center;
     justify-content: center;
-    height: 100vh;
-    background-color: #282c34; /* Цвет фона */
-    color: white;
-    font-size: 2em;
+    align-items: center;
+    z-index: 1000;
 }
 
-#content {
+/* Контейнер для индикатора загрузки */
+#loader-container {
     text-align: center;
-    padding-top: 50px;
+}
+
+/* Круглый индикатор */
+#loader {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    border: 10px solid #ccc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Текст с процентами */
+#loading-text {
+    position: absolute;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #ffffff;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Центрируем текст по горизонтали и вертикали */
+}
+
+/* Стили для основного контента */
+#content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
 }

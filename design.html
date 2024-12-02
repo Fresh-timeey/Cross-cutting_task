@@ -3,17 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Простой сайт с загрузкой</title>
+    <title>Простой сайт с предзагрузчиком</title>
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- Предзагрузчик -->
     <div id="preloader">
-        <h1>Загрузка...</h1>
+        <div id="loader-container">
+            <div id="loader"></div>
+            <div id="loading-text">0%</div>
+        </div>
     </div>
 
-    <div id="content" style="display: none;">
+    <!-- Основной контент сайта -->
+    <div id="content" style="display:none;">
         <h1>Добро пожаловать на сайт!</h1>
-        <!-- Основной контент -->
+        <p>Сайт загружен и готов к использованию.</p>
     </div>
 
     <script src="script.js"></script>
