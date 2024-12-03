@@ -66,20 +66,113 @@
 }
 
 
-/* Стиль кнопки для музыки */
 .music-btn {
     position: fixed;
     top: 10px;
     right: 10px;
-    padding: 10px 20px;
-    background-color: rgba(0, 0, 0, 0.5);
-    color: white;
+    background-color: transparent;
     border: none;
-    border-radius: 5px;
     cursor: pointer;
-    z-index: 1001; /* Поверх других элементов */
+    z-index: 1001;
 }
 
-.music-btn:hover {
-    background-color: rgba(0, 0, 0, 0.7);
+.music-btn img {
+    width: 45px; /* Устанавливаем размер изображения */
+    height: 45px;
+}
+
+
+
+/* Стиль для основного контента */
+#content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    text-align: center;
+    background: linear-gradient(45deg, #9b59b6, #f39c12, #9b59b6, #54fcff);
+    background-size: 400% 400%;
+    animation: gradientAnimation 10s ease infinite;
+}
+
+/* Анимация для плавных переходов цветов */
+@keyframes gradientAnimation {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+/* Стиль для текста */
+#text-box {
+    width: 70%; /* Увеличена ширина */
+    max-width: 700px; /* Максимальная ширина */
+    height: 150px; /* Увеличена высота */
+    background-color: #fff; /* Белый фон */
+    border-radius: 15px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 30px; /* Увеличено расстояние между блоками */
+    position: relative; /* Для правильного позиционирования кнопки внутри */
+}
+
+/* Стиль для текста внутри прямоугольника */
+#text-box h1 {
+    font-size: 2rem; /* Увеличен размер текста */
+    color: #333; /* Цвет текста */
+}
+
+/* Контейнер для кнопок */
+#buttons-container {
+    display: flex;
+    flex-direction: column; /* Расположение кнопок сверху вниз */
+    gap: 30px; /* Отступ между кнопками */
+    align-items: center; /* Центрирование кнопок */
+    position: relative; /* Для позиционирования кнопок относительно контейнера */
+}
+
+/* Стиль для первой кнопки */
+#upload-btn {
+    padding: 30px 50px; /* Увеличен размер кнопки */
+    font-size: 2rem; /* Увеличен размер текста на кнопке */
+    background-color: #ffffff; /* Цвет кнопки */
+    color: #cd2828;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: absolute; /* Абсолютное позиционирование кнопки */
+    bottom: 170px; /* Кнопка располагается на 30px выше нижнего края */
+    left: 50%; /* Центрируем по горизонтали */
+    transform: translateX(-50%); /* Чтобы выровнять по центру */
+}
+
+/* Стиль для второй кнопки */
+#another-btn {
+    padding: 40px 60px; /* Увеличен размер кнопки */
+    font-size: 2rem; /* Увеличен размер текста на кнопке */
+    background-color: #ffffff; /* Цвет кнопки */
+    color: #cd2828;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    position: absolute; /* Абсолютное позиционирование кнопки */
+    bottom: 60px; /* Располагаем эту кнопку немного выше первой */
+    left: 50%; /* Центрируем по горизонтали */
+    transform: translateX(-50%); /* Чтобы выровнять по центру */
+}
+
+/* Наведение на кнопку */
+#upload-btn:hover,
+#another-btn:hover {
+    background-color: #ffffff;
 }

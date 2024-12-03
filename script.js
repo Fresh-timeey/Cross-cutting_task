@@ -33,6 +33,75 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 
+document.addEventListener('DOMContentLoaded', () => {
+    const fileInput = document.getElementById('file-input');
+    const uploadBtn = document.getElementById('upload-btn');
+    const fileSelector = document.getElementById('file-selector');
+    const fileList = document.getElementById('file-list');
 
+    let filesArray = [];
 
+    // Перетаскивание файлов
+    fileSelector.addEventListener('dragover', (event) => {
+        event.preventDefault();
+        fileSelector.style.backgroundColor = 'rgba(255, 255, 255, 1)';
+    });
 
+    fileSelector.addEventListener('dragleave', () => {
+        fileSelector.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+    });
+
+    fileSelector.addEventListener('drop', (event) => {
+        event.preventDefault();
+        const files = event.dataTransfer.files;
+        addFiles(files);
+    });
+
+    // Обработка файлов с буфера обмена
+    document.addEventListener('paste', (event) => {
+        const items = event.clipboardData.items;
+        for (let i = 0; i < items.length; i++) {
+            if (items[i].kind === 'file') {
+                const file = items[i].getAsFile();
+                addFiles([file]);
+            }
+        }
+    });
+
+    // Обработка файлов из input
+    uploadBtn.addEventListener('click', () => {
+        const files = fileInput.files;
+        addFiles(files);
+    });
+
+    // Добавляем файлы в список
+    function addFiles(files) {
+        for (let i = 0; i < files.length; i++) {
+            filesArray.push(files[i]);
+        }
+        updateFileList();
+        location.reload(); // Перезагружаем страницу после добавления файлов
+    }
+
+    // Обновляем отображение списка файлов
+    function updateFileList() {
+        fileList.innerHTML = ''; // Очистить список перед добавлением новых элементов
+
+        filesArray.forEach(file => {
+            const fileItem = document.createElement('div');
+            fileItem.classList.add('file-item');
+
+            // Иконка файла
+            const fileIcon = document.createElement('img');
+            fileIcon.src = 'file-icon.png'; // Указываем путь к иконке файла
+            fileItem.appendChild(fileIcon);
+
+            // Название файла и тип
+            const fileName = document.createElement('p');
+            fileName.innerText = `${file.name} (${file.type})`;
+            fileItem.appendChild(fileName);
+
+            fileList.appendChild(fileItem);
+        });
+    }
+});

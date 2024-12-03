@@ -1,42 +1,49 @@
    <!--design.html -->
 
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Простой сайт с предзагрузчиком</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
-    <!-- Предзагрузчик -->
-    <div id="preloader">
-        <div id="loader-container">
-            <div id="loader"></div>
-            <div id="loading-text">0%</div>
+   <!DOCTYPE html>
+   <html lang="ru">
+   <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Простой сайт с предзагрузчиком</title>
+       <link rel="stylesheet" href="style.css">
+   </head>
+   <body>
+       <!-- Предзагрузчик -->
+       <div id="preloader">
+           <div id="loader-container">
+               <div id="loader"></div>
+               <div id="loading-text">0%</div>
+           </div>
+       </div>
+   
+
+
+    <!-- Основной контент -->
+    <div id="content">
+        <!-- Прямоугольник для текста -->
+        <div id="text-box">
+            <h1>Выберите файлы для обработки</h1>
         </div>
+
+        <!-- Кнопка для выбора файлов -->
+        <button id="upload-btn">Выбрать файлы</button>
     </div>
 
-    <!-- Основной контент сайта -->
-    <div id="content" style="display:none;">
-        <h1>Добро пожаловать на сайт!</h1>
-        <p>Сайт загружен и готов к использованию.</p>
-    </div>
 
-    <script src="script.js"></script>
+   
+       <script src="script.js"></script>
 
-    <embed src="An Everlasting Dream Intertwined.mp3" autostart="true" hidden="false" loop="false" width="300" height="65" align="bottom"> </embed>
+
 </body>
-</html>
+   </html>
+   
+   
+   <!-- Добавляем элемент для аудио 
+   <button id="toggle-music" class="music-btn">Музыка</button>-->
+   <audio id="bg-music" src="An Everlasting Dream Intertwined.mp3" autoplay loop></audio>
+   <button id="toggle-music" class="music-btn">
+    <img src="audio_out.png" id="music-icon" alt="Audio Icon">
+</button>
 
-
-<!-- Добавляем элемент для аудио 
-<button id="toggle-music" class="music-btn">Музыка</button>-->
-<audio id="bg-music" src="An Everlasting Dream Intertwined.mp3" autoplay loop></audio>
-
-
-
-<script src="script.js"></script>
-
-
-
+   <script src="script.js"></script>
