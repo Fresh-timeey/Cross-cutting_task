@@ -1,3 +1,5 @@
+/* style.css*/
+
 /* Сброс стилей */
 * {
     margin: 0;
@@ -61,4 +63,23 @@
     align-items: center;
     height: 100vh;
     text-align: center;
+}
+
+
+/* Стиль кнопки для музыки */
+.music-btn {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    padding: 10px 20px;
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    z-index: 1001; /* Поверх других элементов */
+}
+
+.music-btn:hover {
+    background-color: rgba(0, 0, 0, 0.7);
 }
