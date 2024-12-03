@@ -176,3 +176,44 @@
 #another-btn:hover {
     background-color: #ffffff;
 }
+
+/* Стиль для плавного перехода на весь контент */
+#content, #preloader, .music-btn {
+    transition: opacity 0.5s ease, background-color 0.5s ease;
+}
+
+/* Плавность загрузки */
+#preloader {
+    opacity: 1;
+    animation: fadeOut 1.5s ease forwards; /* Анимация исчезновения */
+    animation-delay: 3s; /* Задержка перед исчезновением */
+}
+
+/* Анимация исчезновения загрузчика */
+@keyframes fadeOut {
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+/* Прозрачность кнопки звука */
+.music-btn {
+    opacity: 0.3; /* Начальная прозрачность */
+    transition: opacity 0.3s ease; /* Плавное изменение прозрачности */
+}
+
+/* Изменение прозрачности при наведении */
+.music-btn:hover {
+    opacity: 1; /* Полная непрозрачность при наведении */
+}
+
+
+
+/* Анимация появления контента */
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
