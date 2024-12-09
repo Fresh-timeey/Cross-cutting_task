@@ -1,13 +1,9 @@
-/* script.js */
-
 let percentage = 0;
 
 let interval = setInterval(() => {
     percentage += 1;
     document.getElementById("loading-text").innerText = `${percentage}%`;
 
-    
-    
     if (percentage === 100) {
         clearInterval(interval);
         document.getElementById("preloader").style.display = 'none'; // Прячем предзагрузчик
@@ -15,12 +11,11 @@ let interval = setInterval(() => {
     }
 }, 50); // Обновление прогресса каждые 50 миллисекунд
 
-
 document.addEventListener('DOMContentLoaded', () => {
-    
     const music = document.getElementById('bg-music');
     const musicIcon = document.getElementById('music-icon');  // Иконка изображения
     
+    // Обработчик для кнопки музыки
     document.getElementById('toggle-music').addEventListener('click', () => {
         if (music.paused) {
             music.play();
@@ -30,78 +25,61 @@ document.addEventListener('DOMContentLoaded', () => {
             musicIcon.src = 'audio_out.png'; // Изменение на "выключённая музыка"
         }
     });
-});
 
-
-document.addEventListener('DOMContentLoaded', () => {
-    const fileInput = document.getElementById('file-input');
     const uploadBtn = document.getElementById('upload-btn');
-    const fileSelector = document.getElementById('file-selector');
+    const dropArea = document.getElementById('drop-area');
     const fileList = document.getElementById('file-list');
+    const content = document.getElementById('content');
 
-    let filesArray = [];
+    let files = [];
 
-    // Перетаскивание файлов
-    fileSelector.addEventListener('dragover', (event) => {
-        event.preventDefault();
-        fileSelector.style.backgroundColor = 'rgba(255, 255, 255, 1)';
-    });
-
-    fileSelector.addEventListener('dragleave', () => {
-        fileSelector.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
-    });
-
-    fileSelector.addEventListener('drop', (event) => {
-        event.preventDefault();
-        const files = event.dataTransfer.files;
-        addFiles(files);
-    });
-
-    // Обработка файлов с буфера обмена
-    document.addEventListener('paste', (event) => {
-        const items = event.clipboardData.items;
-        for (let i = 0; i < items.length; i++) {
-            if (items[i].kind === 'file') {
-                const file = items[i].getAsFile();
-                addFiles([file]);
-            }
-        }
-    });
-
-    // Обработка файлов из input
+    // Обработчик для кнопки загрузки файлов
     uploadBtn.addEventListener('click', () => {
-        const files = fileInput.files;
-        addFiles(files);
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.multiple = true;
+        input.click();
+
+        input.addEventListener('change', (e) => {
+            handleFiles(e.target.files);
+        });
     });
 
-    // Добавляем файлы в список
-    function addFiles(files) {
-        for (let i = 0; i < files.length; i++) {
-            filesArray.push(files[i]);
-        }
-        updateFileList();
-        location.reload(); // Перезагружаем страницу после добавления файлов
-    }
+    // Обработчик для перетаскивания файлов
+    dropArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        dropArea.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
+    });
 
-    // Обновляем отображение списка файлов
-    function updateFileList() {
-        fileList.innerHTML = ''; // Очистить список перед добавлением новых элементов
+    dropArea.addEventListener('dragleave', () => {
+        dropArea.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
+    });
 
-        filesArray.forEach(file => {
+    dropArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        dropArea.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
+        const droppedFiles = e.dataTransfer.files;
+        handleFiles(droppedFiles);
+    });
+
+    // Функция для обработки файлов
+    function handleFiles(newFiles) {
+        files = [...files, ...newFiles];
+
+        // Обновляем список файлов
+        fileList.innerHTML = '';
+        files.forEach(file => {
             const fileItem = document.createElement('div');
-            fileItem.classList.add('file-item');
-
-            // Иконка файла
-            const fileIcon = document.createElement('img');
-            fileIcon.src = 'file-icon.png'; // Указываем путь к иконке файла
-            fileItem.appendChild(fileIcon);
-
-            // Название файла и тип
-            const fileName = document.createElement('p');
-            fileName.innerText = `${file.name} (${file.type})`;
-            fileItem.appendChild(fileName);
-
+            fileItem.className = 'file-item';
+            fileItem.textContent = file.name;
             fileList.appendChild(fileItem);
         });
+
+        // Меняем фон страницы, если файлы выбраны
+        if (files.length > 0) {
+            content.style.backgroundColor = '#fff'; // Становится белым
+            document.getElementById('text-box').style.display = 'none'; // Скрыть текст
+            uploadBtn.style.display = 'none'; // Скрыть кнопку
+        }
     }
 });
