@@ -80,6 +80,15 @@ document.addEventListener('DOMContentLoaded', () => {
             content.style.backgroundColor = '#fff'; // Становится белым
             document.getElementById('text-box').style.display = 'none'; // Скрыть текст
             uploadBtn.style.display = 'none'; // Скрыть кнопку
-        }
+        }   
+       
+   // Показать рабочую область
+const workArea = document.getElementById('work-area');
+workArea.style.display = 'block';
+setTimeout(() => {
+    workArea.style.opacity = '1'; // Плавное появление
+}, 0);
+
     }
+
 });
