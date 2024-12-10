@@ -8,6 +8,9 @@
        <title>Простой сайт с предзагрузчиком</title>
        <link rel="stylesheet" href="style.css">
    </head>
+
+
+
    <body>
        <!-- Предзагрузчик -->
        <div id="preloader">
@@ -30,16 +33,31 @@
         <button id="upload-btn">Выбрать файлы</button>
     </div>
 
-
-
-
-
-
-<!-- Контейнер для отображения выбранных файлов -->
-<div id="file-list">
-    <!-- Здесь будут отображаться выбранные файлы -->
-</div>
-
+    
+    <div id="work-area" class="workspace hidden">
+        <!-- Левая колонка -->
+        <div class="column left">
+            <h3>Выбранные файлы</h3>
+            <ul id="fileList"></ul>
+            <button id="addFileButton">Добавить файл</button>
+        </div>
+    
+        <!-- Центральная колонка -->
+        <div class="column center">
+            <h3>Содержимое файла</h3>
+            <textarea id="fileContent" placeholder="Содержимое выбранного файла" readonly></textarea>
+        </div>
+    
+        <!-- Правая колонка -->
+        <div class="column right">
+            <h3>Обработанное содержимое</h3>
+            <textarea id="processedContent" placeholder="Здесь появится обработанное содержимое"></textarea>
+            <button id="downloadButton">Скачать</button>
+        </div>
+    </div>
+    
+    
+    
 
    
        <script src="script.js"></script>
@@ -48,7 +66,7 @@
 </body>
    </html>
    
-   <div id="work-area"></div>
+
 
    
    <!-- Добавляем элемент для аудио 

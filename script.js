@@ -9,10 +9,15 @@ let interval = setInterval(() => {
         document.getElementById("preloader").style.display = 'none'; // Прячем предзагрузчик
         document.getElementById("content").style.display = 'flex';  // Показываем основной контент
     }
-}, 50); // Обновление прогресса каждые 50 миллисекунд
+}, 50);
 
-document.addEventListener('DOMContentLoaded', () => {
-    const music = document.getElementById('bg-music');
+
+
+// Обновление прогресса каждые 50 миллисекунд
+  
+    
+    
+    document.addEventListener('DOMContentLoaded', () => {const music = document.getElementById('bg-music');
     const musicIcon = document.getElementById('music-icon');  // Иконка изображения
     
     // Обработчик для кнопки музыки
@@ -25,70 +30,80 @@ document.addEventListener('DOMContentLoaded', () => {
             musicIcon.src = 'audio_out.png'; // Изменение на "выключённая музыка"
         }
     });
+    
+        const uploadBtn = document.getElementById('upload-btn');
+        const workArea = document.getElementById('work-area');
+        const fileList = document.getElementById('fileList');
+        const fileContent = document.getElementById('fileContent');
+        const processedContent = document.getElementById('processedContent');
+        const addFileButton = document.getElementById('addFileButton');
+        const downloadButton = document.getElementById('downloadButton');
+    
+        let files = [];
+    
+        // Обработчик для кнопки загрузки файлов
+        uploadBtn.addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.multiple = true;
+            input.click();
+    
+            input.addEventListener('change', (e) => {
+                const selectedFiles = e.target.files;
+                Array.from(selectedFiles).forEach((file) => {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        files.push({ name: file.name, content: event.target.result });
+                        renderFileList();
+                    };
+                    reader.readAsText(file);
+                });
+    
+                workArea.style.display = 'flex';
+                setTimeout(() => {
+                    workArea.style.opacity = '1';
+                }, 0);
+            });
+        });
+    
 
-    const uploadBtn = document.getElementById('upload-btn');
-    const dropArea = document.getElementById('drop-area');
-    const fileList = document.getElementById('file-list');
-    const content = document.getElementById('content');
 
-    let files = [];
 
-    // Обработчик для кнопки загрузки файлов
-    uploadBtn.addEventListener('click', () => {
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.multiple = true;
-        input.click();
 
-        input.addEventListener('change', (e) => {
-            handleFiles(e.target.files);
+
+        // Отображение списка файлов
+        function renderFileList() {
+            fileList.innerHTML = '';
+            files.forEach((file, index) => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `<span class="icon">📄</span>${file.name}`;
+                listItem.addEventListener('click', () => displayFileContent(index));
+                fileList.appendChild(listItem);
+            });
+        }
+    
+        // Отображение содержимого выбранного файла
+        function displayFileContent(index) {
+            fileContent.value = files[index].content;
+            processedContent.value = `Обработанное содержимое для ${files[index].name}`;
+        }
+    
+        // Скачивание обработанного файла
+        downloadButton.addEventListener('click', () => {
+            const blob = new Blob([processedContent.value], { type: 'text/plain' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'processed_file.txt';
+            link.click();
+        });
+    
+        // Добавление файла вручную
+        addFileButton.addEventListener('click', () => {
+            const fileName = prompt('Введите имя файла:');
+            if (fileName) {
+                files.push({ name: fileName, content: `Содержимое файла ${fileName}` });
+                renderFileList();
+            }
         });
     });
-
-    // Обработчик для перетаскивания файлов
-    dropArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        dropArea.style.backgroundColor = 'rgba(0, 0, 0, 0.2)';
-    });
-
-    dropArea.addEventListener('dragleave', () => {
-        dropArea.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
-    });
-
-    dropArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        dropArea.style.backgroundColor = 'rgba(0, 0, 0, 0.1)';
-        const droppedFiles = e.dataTransfer.files;
-        handleFiles(droppedFiles);
-    });
-
-    // Функция для обработки файлов
-    function handleFiles(newFiles) {
-        files = [...files, ...newFiles];
-
-        // Обновляем список файлов
-        fileList.innerHTML = '';
-        files.forEach(file => {
-            const fileItem = document.createElement('div');
-            fileItem.className = 'file-item';
-            fileItem.textContent = file.name;
-            fileList.appendChild(fileItem);
-        });
-
-        // Меняем фон страницы, если файлы выбраны
-        if (files.length > 0) {
-            content.style.backgroundColor = '#fff'; // Становится белым
-            document.getElementById('text-box').style.display = 'none'; // Скрыть текст
-            uploadBtn.style.display = 'none'; // Скрыть кнопку
-        }   
-       
-   // Показать рабочую область
-const workArea = document.getElementById('work-area');
-workArea.style.display = 'block';
-setTimeout(() => {
-    workArea.style.opacity = '1'; // Плавное появление
-}, 0);
-
-    }
-
-});
+    

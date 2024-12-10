@@ -70,15 +70,22 @@
     position: fixed;
     top: 10px;
     right: 10px;
-    background-color: transparent;
+    background-color: transparent; /* Обеспечиваем прозрачность фона */
     border: none;
     cursor: pointer;
     z-index: 1001;
+    opacity: 0.3; /* Начальная прозрачность кнопки */
+    transition: opacity 0.3s ease; /* Плавное изменение прозрачности */
 }
 
 .music-btn img {
-    width: 45px; /* Устанавливаем размер изображения */
-    height: 45px;
+    width: 38px; /* Устанавливаем размер изображения */
+    height: 38px;
+}
+
+.music-btn:hover {
+    opacity: 1; /* Полная непрозрачность при наведении */
+    background-color: transparent; /* Убираем синий фон при наведении */
 }
 
 
@@ -197,16 +204,6 @@
     }
 }
 
-/* Прозрачность кнопки звука */
-.music-btn {
-    opacity: 0.3; /* Начальная прозрачность */
-    transition: opacity 0.3s ease; /* Плавное изменение прозрачности */
-}
-
-/* Изменение прозрачности при наведении */
-.music-btn:hover {
-    opacity: 1; /* Полная непрозрачность при наведении */
-}
 
 
 
@@ -217,17 +214,104 @@
     }
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*Колонки*/
 #work-area {
     position: absolute;
-    top: 1rem; /* Отступ сверху */
-    left: 1rem; /* Отступ слева */
-    width: calc(100% - 2rem); /* Ширина с учётом отступов */
-    height: calc(100% - 2rem); /* Высота с учётом отступов */
-    background-color: rgba(255, 255, 255, 0.9); /* Белый фон с прозрачностью */
-    border-radius: 10px; /* Скругление углов */
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Тень */
-    z-index: 100; /* Поверх остальных элементов */
-    display: none; /* Скрываем по умолчанию */
-    transition: opacity 0.3s ease; /* Плавное появление */
-    opacity: 0; /* Начальная прозрачность */
+    top: 1rem;
+    left: 1rem;
+    width: calc(100% - 2rem);
+    height: calc(100% - 2rem);
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    display: none;
+    transition: opacity 0.3s ease;
+    opacity: 0;
+}
+
+.workspace {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border-right: 1px solid #ccc;
+}
+
+.column:last-child {
+    border-right: none;
+}
+
+h3 {
+    margin: 0 0 10px;
+    text-align: center;
+    font-size: 18px;
+    color: #333;
+}
+
+ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    overflow-y: auto;
+    flex: 1;
+}
+
+ul li {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    margin-bottom: 5px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+ul li:hover {
+    background-color: #e6f7ff;
+}
+
+textarea {
+    flex: 1;
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    resize: none;
+}
+
+button {
+    padding: 10px;
+    font-size: 16px;
+    background-color: #0078d7;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #005bb5;
 }
