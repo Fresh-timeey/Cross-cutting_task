@@ -40,7 +40,7 @@ let interval = setInterval(() => {
         const downloadButton = document.getElementById('downloadButton');
     
         let files = [];
-    
+
         // Обработчик для кнопки загрузки файлов
         uploadBtn.addEventListener('click', () => {
             const input = document.createElement('input');
@@ -49,31 +49,43 @@ let interval = setInterval(() => {
             input.click();
     
             input.addEventListener('change', (e) => {
-                const selectedFiles = e.target.files;
-                Array.from(selectedFiles).forEach((file) => {
-                    const reader = new FileReader();
-                    reader.onload = (event) => {
-                        files.push({ name: file.name, content: event.target.result });
-                        renderFileList();
-                    };
-                    reader.readAsText(file);
-                });
-    
-                workArea.style.display = 'flex';
-                setTimeout(() => {
-                    workArea.style.opacity = '1';
-                }, 0);
+                handleFiles(e.target.files);
             });
         });
     
-
-
-
-
-
+        // Обработчик для кнопки "Добавить файл", выбираем файлы с устройства
+        addFileButton.addEventListener('click', () => {
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.multiple = true; // позволяет выбрать несколько файлов
+            input.click();
+    
+            input.addEventListener('change', (e) => {
+                handleFiles(e.target.files);
+            });
+        });
+    
+        // Функция для обработки файлов
+        function handleFiles(newFiles) {
+            // Добавляем выбранные файлы в массив
+            Array.from(newFiles).forEach((file) => {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    files.push({ name: file.name, content: event.target.result });
+                    renderFileList();
+                };
+                reader.readAsText(file);
+            });
+    
+            workArea.style.display = 'flex'; // Показываем рабочую область
+            setTimeout(() => {
+                workArea.style.opacity = '1'; // Плавное появление
+            }, 0);
+        }
+    
         // Отображение списка файлов
         function renderFileList() {
-            fileList.innerHTML = '';
+            fileList.innerHTML = ''; // Очистить текущий список
             files.forEach((file, index) => {
                 const listItem = document.createElement('li');
                 listItem.innerHTML = `<span class="icon">📄</span>${file.name}`;
@@ -96,14 +108,4 @@ let interval = setInterval(() => {
             link.download = 'processed_file.txt';
             link.click();
         });
-    
-        // Добавление файла вручную
-        addFileButton.addEventListener('click', () => {
-            const fileName = prompt('Введите имя файла:');
-            if (fileName) {
-                files.push({ name: fileName, content: `Содержимое файла ${fileName}` });
-                renderFileList();
-            }
-        });
     });
-    
