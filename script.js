@@ -11,15 +11,10 @@ let interval = setInterval(() => {
     }
 }, 50);
 
+document.addEventListener('DOMContentLoaded', () => {
+    const music = document.getElementById('bg-music');
+    const musicIcon = document.getElementById('music-icon'); // Иконка изображения
 
-
-// Обновление прогресса каждые 50 миллисекунд
-  
-    
-    
-    document.addEventListener('DOMContentLoaded', () => {const music = document.getElementById('bg-music');
-    const musicIcon = document.getElementById('music-icon');  // Иконка изображения
-    
     // Обработчик для кнопки музыки
     document.getElementById('toggle-music').addEventListener('click', () => {
         if (music.paused) {
@@ -30,9 +25,7 @@ let interval = setInterval(() => {
             musicIcon.src = 'audio_out.png'; // Изменение на "выключённая музыка"
         }
     });
-    
 
-    
     const uploadBtn = document.getElementById('upload-btn');
     const workArea = document.getElementById('work-area');
     const fileList = document.getElementById('fileList');
@@ -40,7 +33,6 @@ let interval = setInterval(() => {
     const processedContent = document.getElementById('processedContent');
     const addFileButton = document.getElementById('addFileButton');
     const downloadButton = document.getElementById('downloadButton');
-    const content = document.getElementById('content'); // Контейнер с основным контентом
 
     let files = [];
 
@@ -60,7 +52,7 @@ let interval = setInterval(() => {
     addFileButton.addEventListener('click', () => {
         const input = document.createElement('input');
         input.type = 'file';
-        input.multiple = true; // позволяет выбрать несколько файлов
+        input.multiple = true; // Позволяет выбрать несколько файлов
         input.click();
 
         input.addEventListener('change', (e) => {
@@ -74,10 +66,12 @@ let interval = setInterval(() => {
 
         // Обновляем список файлов
         fileList.innerHTML = '';
-        files.forEach(file => {
+        files.forEach((file, index) => {
             const fileItem = document.createElement('div');
             fileItem.className = 'file-item';
             fileItem.textContent = file.name;
+            fileItem.style.cursor = 'pointer'; // Указываем, что элемент кликабельный
+            fileItem.addEventListener('click', () => displayFileContent(file)); // Добавляем обработчик клика
             fileList.appendChild(fileItem);
         });
 
@@ -94,21 +88,91 @@ let interval = setInterval(() => {
         }
     }
 
-    // Отображение списка файлов
-    function renderFileList() {
-        fileList.innerHTML = ''; // Очистить текущий список
-        files.forEach((file, index) => {
-            const listItem = document.createElement('li');
-            listItem.innerHTML = `<span class="icon">📄</span>${file.name}`;
-            listItem.addEventListener('click', () => displayFileContent(index));
-            fileList.appendChild(listItem);
-        });
+    // Функция для отображения содержимого выбранного файла
+    function displayFileContent(file) {
+        const fileType = file.type;
+
+        // Очистка содержимого перед отображением
+        fileContent.innerHTML = '';
+        processedContent.value = `Обработанное содержимое для ${file.name}`;
+
+        if (fileType === 'application/pdf') {
+            renderPDF(file);
+        } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+            renderWord(file);
+        } else if (fileType.startsWith('image/')) {
+            renderImage(file);
+        } else {
+            fileContent.textContent = 'Этот формат файла не поддерживается для отображения.';
+        }
     }
 
-    // Отображение содержимого выбранного файла
-    function displayFileContent(index) {
-        fileContent.value = files[index].content;
-        processedContent.value = `Обработанное содержимое для ${files[index].name}`;
+    function renderPDF(file) {
+        const pdfjsLib = window['pdfjs-dist/build/pdf'];
+        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+    
+        const fileReader = new FileReader();
+        fileReader.onload = function () {
+            const pdfData = new Uint8Array(this.result);
+    
+            pdfjsLib.getDocument(pdfData).promise.then((pdf) => {
+                const numPages = pdf.numPages;
+                const contentDiv = document.getElementById('fileContent'); // Контейнер для текста
+                contentDiv.innerHTML = ''; // Очищаем перед отображением текста
+    
+                let textContent = '';
+    
+                const promises = [];
+                for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
+                    promises.push(
+                        pdf.getPage(pageNumber).then((page) => {
+                            return page.getTextContent().then((text) => {
+                                text.items.forEach((item) => {
+                                    textContent += item.str + ' ';
+                                });
+                            });
+                        })
+                    );
+                }
+    
+                Promise.all(promises).then(() => {
+                    contentDiv.textContent = textContent.trim(); // Отображаем весь текст в контейнере
+                }).catch((err) => {
+                    contentDiv.textContent = 'Ошибка при извлечении текста из PDF.';
+                    console.error('Ошибка извлечения текста:', err);
+                });
+            }).catch((err) => {
+                document.getElementById('fileContent').textContent = 'Ошибка загрузки PDF.';
+                console.error('Ошибка загрузки PDF:', err);
+            });
+        };
+    
+        fileReader.readAsArrayBuffer(file);
+    }
+    
+
+
+    // Функция для отображения содержимого Word-файла
+    function renderWord(file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            const arrayBuffer = event.target.result;
+            mammoth.extractRawText({ arrayBuffer: arrayBuffer }).then((result) => {
+                fileContent.textContent = result.value;
+            }).catch(() => {
+                fileContent.textContent = 'Не удалось прочитать содержимое Word-файла.';
+            });
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    // Функция для отображения изображения
+    function renderImage(file) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.style.maxWidth = '100%';
+        img.style.maxHeight = '100%';
+        fileContent.appendChild(img);
     }
 
     // Скачивание обработанного файла
