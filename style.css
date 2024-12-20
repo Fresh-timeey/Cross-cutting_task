@@ -322,4 +322,58 @@ button:hover {
 
 
 
+.file-list-container {
+    max-height: 400px; /* Увеличение высоты */
+    padding: 20px; /* Увеличение внутренних отступов */
+    border: 2px solid #aaa; /* Более заметная рамка */
+    background-color: #ffffff; /* Более контрастный фон */
+}
+
+.file-item {
+    padding: 15px; /* Увеличенные отступы */
+    border-radius: 10px; /* Более округлые углы */
+    background-color: #eef7ff; /* Нежно-голубой фон */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.15); /* Более заметная тень */
+    cursor: pointer; /* Изменить курсор на указатель */
+}
+
+.file-item:hover {
+    background-color: #f0fafe; /* Меняем цвет при наведении */
+    transform: scale(1.02); /* Немного увеличиваем элемент */
+    transition: transform 0.3s ease, background-color 0.3s ease; /* Плавный переход */
+}
+.file-list-container {
+    display: none; /* Прячем контейнер */
+}
+
+.file-list-container.active {
+    display: flex; /* Показываем при добавлении класса .active */
+}
+
+.file-item.dragging {
+    opacity: 0.6;
+    background-color: #e0e0e0;
+}
+
+.file-icon {
+    width: 40px; /* Увеличиваем размер */
+    height: 40px;
+    border-radius: 50%; /* Добавляем круговые иконки */
+    background-color: #ccc; /* Серый фон для иконки */
+}
+
+.file-name {
+    font-size: 16px; /* Увеличиваем текст */
+    font-weight: bold; /* Делаем его жирным */
+    color: #555; /* Более мягкий цвет */
+}
+
+
+
+
+
+
+
+
+
 

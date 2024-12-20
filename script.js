@@ -11,6 +11,13 @@ let interval = setInterval(() => {
     }
 }, 50);
 
+
+
+
+
+
+
+
 document.addEventListener('DOMContentLoaded', () => {
     const music = document.getElementById('bg-music');
     const musicIcon = document.getElementById('music-icon'); // Иконка изображения
@@ -183,4 +190,16 @@ document.addEventListener('DOMContentLoaded', () => {
         link.download = 'processed_file.txt';
         link.click();
     });
+
+
+
+
+
+
+
+    
 });
+
+
+
+
