@@ -17,7 +17,6 @@ let interval = setInterval(() => {
 
 
 
-
 document.addEventListener('DOMContentLoaded', () => {
     const music = document.getElementById('bg-music');
     const musicIcon = document.getElementById('music-icon'); // Иконка изображения
@@ -110,7 +109,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else if (fileType.startsWith('image/')) {
             renderImage(file);
         } else {
-            fileContent.textContent = 'Этот формат файла не поддерживается для отображения.';
+            fileContent.textContent = 'Этот формат файла пока что не поддерживается для отображения(';
         }
     }
 
@@ -203,3 +202,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
 
+//Для Unit-тестов
+
+module.exports = {
+    handleFiles,
+    renderWord,
+    renderPDF
+};
