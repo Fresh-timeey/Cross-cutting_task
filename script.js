@@ -40,18 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const addFileButton = document.getElementById('addFileButton');
     const downloadButton = document.getElementById('downloadButton');
 
-
-
-
-  //  const math = window.math;
     let files = [];
-
-    // Подключаем библиотеки
-    const JSZip = window.JSZip;
-    const CryptoJS = window.CryptoJS;
-
-    // Поддерживаемые форматы
-    const supportedFormats = ['text/plain', 'application/json', 'application/xml', 'application/x-yaml'];
 
     // Обработчик для кнопки загрузки файлов
     uploadBtn.addEventListener('click', () => {
@@ -106,9 +95,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Функция для отображения содержимого выбранного файла
-    async function displayFileContent(file) {
+    function displayFileContent(file) {
         const fileType = file.type;
 
+        // Очистка содержимого перед отображением
         fileContent.innerHTML = '';
         processedContent.value = `Обработанное содержимое для ${file.name}`;
 
@@ -116,54 +106,36 @@ document.addEventListener('DOMContentLoaded', () => {
             renderPDF(file);
         } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
             renderWord(file);
-        } else if (fileType.startsWith('text/') || supportedFormats.includes(fileType)) {
-            const content = await readFile(file);
-            fileContent.textContent = content;
-            processedContent.value = `Обработанное содержимое: ${file.name}`;
-        } else if (fileType === 'application/zip') {
-            const files = await handleZip(file);
-            displayFiles(files);
+        } else if (fileType.startsWith('image/')) {
+            renderImage(file);
+        } else if (fileType === 'text/plain') {
+            renderPlainText(file);
+        } else if (fileType === 'application/xml' || fileType === 'text/xml') {
+            renderXML(file);
+        } else if (fileType === 'application/json') {
+            renderJSON(file);
+        } else if (fileType === 'application/x-yaml' || fileType === 'text/yaml' || fileType === 'text/x-yaml') {
+            renderYAML(file);
         } else {
             fileContent.textContent = 'Этот формат файла пока что не поддерживается для отображения(';
         }
     }
 
-    // Чтение файла
-    function readFile(file) {
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onload = () => resolve(reader.result);
-            reader.onerror = () => reject(reader.error);
-            reader.readAsText(file);
-        });
-    }
-
-    // Обработка zip-архивов
-    async function handleZip(file) {
-        const zip = new JSZip();
-        const unzipped = await zip.loadAsync(file);
-        const files = [];
-
-        for (const fileName in unzipped.files) {
-            const file = unzipped.file(fileName);
-            if (file) {
-                const content = await file.async('string');
-                files.push({ name: fileName, content });
-            }
-        }
-
-        return files;
-    }
-
     function renderPDF(file) {
         const pdfjsLib = window['pdfjs-dist/build/pdf'];
         pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+    
         const fileReader = new FileReader();
         fileReader.onload = function () {
             const pdfData = new Uint8Array(this.result);
+    
             pdfjsLib.getDocument(pdfData).promise.then((pdf) => {
                 const numPages = pdf.numPages;
+                const contentDiv = document.getElementById('fileContent'); // Контейнер для текста
+                contentDiv.innerHTML = ''; // Очищаем перед отображением текста
+    
                 let textContent = '';
+    
                 const promises = [];
                 for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
                     promises.push(
@@ -176,17 +148,95 @@ document.addEventListener('DOMContentLoaded', () => {
                         })
                     );
                 }
+    
                 Promise.all(promises).then(() => {
-                    fileContent.textContent = textContent.trim();
-                }).catch(() => {
-                    fileContent.textContent = 'Ошибка при извлечении текста из PDF.';
+                    contentDiv.textContent = textContent.trim(); // Отображаем весь текст в контейнере
+                }).catch((err) => {
+                    contentDiv.textContent = 'Ошибка при извлечении текста из PDF.';
+                    console.error('Ошибка извлечения текста:', err);
                 });
-            }).catch(() => {
-                fileContent.textContent = 'Ошибка загрузки PDF.';
+            }).catch((err) => {
+                document.getElementById('fileContent').textContent = 'Ошибка загрузки PDF.';
+                console.error('Ошибка загрузки PDF:', err);
             });
         };
+    
         fileReader.readAsArrayBuffer(file);
     }
+    
+
+
+    // Функция для отображения содержимого Word-файла
+    function renderWord(file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            const arrayBuffer = event.target.result;
+            mammoth.extractRawText({ arrayBuffer: arrayBuffer }).then((result) => {
+                fileContent.textContent = result.value;
+            }).catch(() => {
+                fileContent.textContent = 'Не удалось прочитать содержимое Word-файла.';
+            });
+        };
+        reader.readAsArrayBuffer(file);
+    }
+
+    // Функция для отображения изображения
+    function renderImage(file) {
+        const img = document.createElement('img');
+        img.src = URL.createObjectURL(file);
+        img.style.maxWidth = '100%';
+        img.style.maxHeight = '100%';
+        fileContent.appendChild(img);
+    }
+
+     // Функция для отображения содержимого текста
+     function renderPlainText(file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            fileContent.textContent = event.target.result;
+        };
+        reader.readAsText(file);
+    }
+
+    // Функция для отображения XML
+    function renderXML(file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(event.target.result, 'application/xml');
+            fileContent.textContent = new XMLSerializer().serializeToString(xmlDoc);
+        };
+        reader.readAsText(file);
+    }
+
+    // Функция для отображения JSON
+    function renderJSON(file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            try {
+                const json = JSON.parse(event.target.result);
+                fileContent.textContent = JSON.stringify(json, null, 2); // Отображаем отформатированный JSON
+            } catch (error) {
+                fileContent.textContent = 'Ошибка при парсинге JSON.';
+            }
+        };
+        reader.readAsText(file);
+    }
+
+    // Функция для отображения YAML
+    function renderYAML(file) {
+        const reader = new FileReader();
+        reader.onload = function (event) {
+            try {
+                const yaml = jsyaml.load(event.target.result);
+                fileContent.textContent = JSON.stringify(yaml, null, 2); // Отображаем YAML как JSON
+            } catch (error) {
+                fileContent.textContent = 'Ошибка при парсинге YAML.';
+            }
+        };
+        reader.readAsText(file);
+    }
+
 
     // Скачивание обработанного файла
     downloadButton.addEventListener('click', () => {
@@ -196,8 +246,15 @@ document.addEventListener('DOMContentLoaded', () => {
         link.download = 'processed_file.txt';
         link.click();
     });
-});
 
+
+
+
+
+
+
+    
+});
 
 
 
