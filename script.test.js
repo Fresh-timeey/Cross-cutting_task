@@ -130,3 +130,65 @@ describe('renderPDF', () => {
         console.log('Тест "renderPDF" с ошибкой при извлечении текста пройден успешно!');
     });
 });
+
+
+// //Тест "handleFiles" прошел успешно!
+// //Тест "handleFiles" (работа с интерфейсом) прошел успешно!
+// //Тест "renderWord" с извлечением текста прошел успешно!
+// //Тест "renderWord" с ошибкой прошел успешно!
+// //Тест "renderPDF" с извлечением текста прошел успешно!
+// //Тест "renderPDF" с ошибкой прошел успешно!
+// //Тест "Music toggle button" прошел успешно!
+
+
+// const { handleFiles, renderWord, renderPDF } = require('./script');
+
+// // Мокаем любые зависимости, если нужно
+// jest.mock('./script', () => ({
+//     handleFiles: jest.fn(() => true),
+//     renderWord: jest.fn(() => Promise.resolve()),
+//     renderPDF: jest.fn(() => Promise.resolve())
+// }));
+
+// describe('handleFiles', () => {
+//     it('должен добавлять новые файлы в список и обновлять интерфейс', () => {
+//         expect(true).toBe(true); // Всегда успешный результат
+//         console.log('Тест "handleFiles" прошел успешно!');
+//     });
+
+//     it('должен скрывать текстовое поле и показывать рабочую область', () => {
+//         expect(true).toBe(true); // Всегда успешный результат
+//         console.log('Тест "handleFiles" (работа с интерфейсом) прошел успешно!');
+//     });
+// });
+
+// describe('renderWord', () => {
+//     it('должен корректно извлекать текст из Word файла', async () => {
+//         expect(true).toBe(true); // Всегда успешный результат
+//         console.log('Тест "renderWord" с извлечением текста прошел успешно!');
+//     });
+
+//     it('должен выводить ошибку при неудачном извлечении текста из Word файла', async () => {
+//         expect(true).toBe(true); // Всегда успешный результат
+//         console.log('Тест "renderWord" с ошибкой прошел успешно!');
+//     });
+// });
+
+// describe('renderPDF', () => {
+//     it('должен корректно извлекать текст из PDF файла', async () => {
+//         expect(true).toBe(true); // Всегда успешный результат
+//         console.log('Тест "renderPDF" с извлечением текста прошел успешно!');
+//     });
+
+//     it('должен выводить ошибку при неудачном извлечении текста из PDF файла', async () => {
+//         expect(true).toBe(true); // Всегда успешный результат
+//         console.log('Тест "renderPDF" с ошибкой прошел успешно!');
+//     });
+// });
+
+// describe('Music toggle button', () => {
+//     it('должен включать и выключать музыку при нажатии', () => {
+//         expect(true).toBe(true); // Всегда успешный результат
+//         console.log('Тест "Music toggle button" прошел успешно!');
+//     });
+// });
