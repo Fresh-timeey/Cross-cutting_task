@@ -440,10 +440,30 @@ const downloadButton = document.getElementById('downloadButton'); // Кнопк�
         let blob;
         let filename = `processed_file.${format}`;
 
-        if (archive !== 'none') {
-            alert(`Файлы будут архивированы в формат ${archive}. Эта функция требует реализации.`);
-            return;
+        // Если выбран архив
+    if (archive !== 'none') {
+        const zip = new JSZip(); // Создаем новый архив
+        let archiveFilename = `processed_files.zip`;
+
+        // Добавляем файл в архив
+        if (format === 'json') {
+            zip.file(filename, JSON.stringify(content));
+        } else {
+            zip.file(filename, content);
         }
+
+        // Генерация архива
+        zip.generateAsync({ type: "blob" })
+            .then((blob) => {
+                const link = document.createElement('a');
+                link.href = URL.createObjectURL(blob);
+                link.download = archiveFilename;
+                link.click();
+            });
+
+        return;
+    }
+
 
         // Создаем blob для выбранного контента
         if (format === 'json') {
