@@ -36,9 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const workArea = document.getElementById('work-area');
     const fileList = document.getElementById('fileList');
     const fileContent = document.getElementById('fileContent');
-    const processedContent = document.getElementById('processedContent');
+
     const addFileButton = document.getElementById('addFileButton');
-    const downloadButton = document.getElementById('downloadButton');
+
 
     let files = [];
 
@@ -415,19 +415,48 @@ loadMathJS();
 
 
 
+const downloadButton = document.getElementById('downloadButton'); // Кнопка скачивания
+    const formatButton = document.getElementById('formatButton'); // Кнопка открытия меню
+    const menuOptions = document.getElementById('menuOptions'); // Меню форматов
+    const processedContent = document.getElementById('processedContent'); // Контент для скачивания
 
-    // Скачивание обработанного файла
-    downloadButton.addEventListener('click', () => {
-        const blob = new Blob([processedContent.value], { type: 'text/plain' });
-        const link = document.createElement('a');
-        link.href = URL.createObjectURL(blob);
-        link.download = 'processed_file.txt';
-        link.click();
+    // Открытие/закрытие меню выбора форматов
+    formatButton.addEventListener('click', (event) => {
+        event.stopPropagation();
+        menuOptions.classList.toggle('hidden');
     });
 
+    // Закрытие меню при клике вне его
+    document.addEventListener('click', () => {
+        menuOptions.classList.add('hidden');
+    });
 
+    // Скачивание файла
+    downloadButton.addEventListener('click', () => {
+        const format = document.querySelector('input[name="fileFormat"]:checked').value;
+        const archive = document.querySelector('input[name="archiveFormat"]:checked').value;
+        let content = processedContent.value;
 
+        let blob;
+        let filename = `processed_file.${format}`;
 
+        if (archive !== 'none') {
+            alert(`Файлы будут архивированы в формат ${archive}. Эта функция требует реализации.`);
+            return;
+        }
+
+        // Создаем blob для выбранного контента
+        if (format === 'json') {
+            blob = new Blob([JSON.stringify(content)], { type: 'application/json' });
+        } else {
+            blob = new Blob([content], { type: 'text/plain' });
+        }
+
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = filename;
+        link.click();
+    });
 
 
 

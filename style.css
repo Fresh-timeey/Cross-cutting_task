@@ -375,5 +375,75 @@ button:hover {
 
 
 
+.download-container {
+    display: flex;
+    align-items: center;
+    position: relative;
+}
+
+#downloadButton {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #0078d7;
+    color: white;
+    border: none;
+    border-radius: 5px 0 0 5px; /* Округление левой части кнопки */
+    cursor: pointer;
+}
+
+#formatButton {
+    padding: 10px;
+    background-color: #005bb5;
+    color: white;
+    border: none;
+    border-radius: 0 5px 5px 0; /* Округление правой части кнопки */
+    cursor: pointer;
+    font-size: 16px;
+}
+
+#formatButton .arrow {
+    font-size: 14px;
+    margin-left: 5px;
+}
+
+.dropdown-wrapper {
+    position: relative;
+}
+
+.dropdown {
+    position: absolute;
+    bottom: 100%; /* Меню всплывает вверх */
+    right: 0; /* Выравнивание по правому краю кнопки */
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1); /* Тень вниз для эффекта всплытия */
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 10;
+    min-width: 200px;
+}
+
+.dropdown.hidden {
+    display: none;
+}
+
+.dropdown label {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.dropdown label:hover {
+    background-color: #f0f0f0;
+}
+
+.dropdown legend {
+    font-size: 14px;
+    font-weight: bold;
+}
 
 

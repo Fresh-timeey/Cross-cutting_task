@@ -58,9 +58,32 @@
         <div class="column right">
             <h3>Обработанное содержимое</h3>
             <textarea id="processedContent" placeholder="Здесь появится обработанное содержимое"></textarea>
-            <button id="downloadButton">Скачать</button>
-        </div>
-    </div>
+            <div class="download-container">
+                <!-- Левая часть кнопки для скачивания -->
+                <button id="downloadButton">Скачать</button>
+            
+                <!-- Правая часть кнопки для выбора формата -->
+                <div class="dropdown-wrapper">
+                    <button id="formatButton"><span class="arrow">&#9660;</span></button>
+                    <div id="menuOptions" class="dropdown hidden">
+                        <fieldset>
+                            <legend>Формат файла:</legend>
+                            <label><input type="radio" name="fileFormat" value="txt" checked> TXT (Plain Text)</label>
+                            <label><input type="radio" name="fileFormat" value="xml"> XML</label>
+                            <label><input type="radio" name="fileFormat" value="json"> JSON</label>
+                            <label><input type="radio" name="fileFormat" value="yaml"> YAML</label>
+                        </fieldset>
+                        <fieldset>
+                            <legend>Архивация:</legend>
+                            <label><input type="radio" name="archiveFormat" value="none" checked> Без архива</label>
+                            <label><input type="radio" name="archiveFormat" value="zip"> ZIP</label>
+                            <label><input type="radio" name="archiveFormat" value="rar"> RAR</label>
+                        </fieldset>
+                    </div>
+                </div>
+            </div>
+            
+        
     
     
         <!-- Скрипты -->
