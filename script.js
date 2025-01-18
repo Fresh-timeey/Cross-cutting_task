@@ -273,60 +273,148 @@ function renderWord(file) {
 
 
 
+// Функция для извлечения и вычисления арифметических операций
+function extractAndCalculateOperations(text, fileName) {
+    const operations = [];
+    
+    // Первый способ: без регулярных выражений (обработка всех операций)
+    const basicOperations = [];
+    const lines = text.split('\n');
+    
+    lines.forEach(line => {
+        const match = line.match(/(\d+[\.,]?\d*)\s*([+\-*/])\s*(\d+[\.,]?\d*)/g);
+        if (match) {
+            match.forEach(expression => {
+                const matchParts = expression.match(/(\d+[\.,]?\d*)\s*([+\-*/])\s*(\d+[\.,]?\d*)/);
+                if (matchParts) {
+                    let num1 = matchParts[1].replace(',', '.'); // Заменяем запятую на точку
+                    let num2 = matchParts[3].replace(',', '.'); // Заменяем запятую на точку
+                    const operator = matchParts[2];
 
+                    // Преобразуем в числа
+                    num1 = parseFloat(num1);
+                    num2 = parseFloat(num2);
+                    let result;
 
+                    // Выполняем операцию
+                    switch (operator) {
+                        case '+':
+                            result = num1 + num2;
+                            break;
+                        case '-':
+                            result = num1 - num2;
+                            break;
+                        case '*':
+                            result = num1 * num2;
+                            break;
+                        case '/':
+                            result = num2 !== 0 ? num1 / num2 : 'Ошибка (деление на 0)';
+                            break;
+                        default:
+                            result = 'Ошибка';
+                    }
 
-    function extractAndCalculateOperations(text) {
-        const operations = [];
-        
-        // Регулярное выражение для поиска арифметических операций с дробными числами, учитая точку и запятую
-        const regex = /(\d+[\.,]?\d*)\s*([+\-*/])\s*(\d+[\.,]?\d*)/g;
-        let match;
-    
-        // Ищем все арифметические операции в тексте
-        while ((match = regex.exec(text)) !== null) {
-            let num1 = match[1].replace(',', '.'); // Заменяем запятую на точку
-            let num2 = match[3].replace(',', '.'); // Заменяем запятую на точку
-            const operator = match[2];
-    
-            // Преобразуем в числа
-            num1 = parseFloat(num1);
-            num2 = parseFloat(num2);
-            let result;
-    
-            // Выполняем операцию
-            switch (operator) {
-                case '+':
-                    result = num1 + num2;
-                    break;
-                case '-':
-                    result = num1 - num2;
-                    break;
-                case '*':
-                    result = num1 * num2;
-                    break;
-                case '/':
-                    result = num2 !== 0 ? num1 / num2 : 'Ошибка (деление на 0)';
-                    break;
-                default:
-                    result = 'Ошибка';
-            }
-    
-            operations.push(`${match[1]} ${operator} ${match[3]} = ${result}`);
+                    basicOperations.push(`${matchParts[1]} ${operator} ${matchParts[3]} = ${result}`);
+                }
+            });
         }
-      // Если не было найдено операций, возвращаем сообщение
-      if (operations.length === 0) {
+    });
+    
+    operations.push('Без регулярных выражений:\n' + basicOperations.join('\n'));
+
+    // Второй способ: использование регулярных выражений (для поиска всех операций в тексте)
+    const regexOperations = [];
+    const regex = /(\d+[\.,]?\d*)\s*([+\-*/])\s*(\d+[\.,]?\d*)/g;
+    let matchRegex;
+    
+    while ((matchRegex = regex.exec(text)) !== null) {
+        let num1 = matchRegex[1].replace(',', '.'); // Заменяем запятую на точку
+        let num2 = matchRegex[3].replace(',', '.'); // Заменяем запятую на точку
+        const operator = matchRegex[2];
+
+        // Преобразуем в числа
+        num1 = parseFloat(num1);
+        num2 = parseFloat(num2);
+        let result;
+
+        // Выполняем операцию
+        switch (operator) {
+            case '+':
+                result = num1 + num2;
+                break;
+            case '-':
+                result = num1 - num2;
+                break;
+            case '*':
+                result = num1 * num2;
+                break;
+            case '/':
+                result = num2 !== 0 ? num1 / num2 : 'Ошибка (деление на 0)';
+                break;
+            default:
+                result = 'Ошибка';
+        }
+
+        regexOperations.push(`${matchRegex[1]} ${operator} ${matchRegex[3]} = ${result}`);
+    }
+
+    operations.push('С использованием регулярных выражений:\n' + regexOperations.join('\n'));
+
+
+    // Третий способ: использование библиотеки math.js
+    const mathOperations = [];
+    try {
+        const math = window.math; // Используем глобальный объект библиотеки math.js
+        const expressions = text.match(/[\d\+\-\*\/\(\)\.]+/g); // Выражения для парсинга с помощью math.js
+        
+        if (expressions) {
+            expressions.forEach((expr) => {
+                expr = expr.replace(',', '.'); // Заменяем запятую на точку
+
+                // Пропускаем выражения с незавершенными операциями
+                if (/[\d\+\-\*\/]$/.test(expr)) {
+                    try {
+                        const result = math.evaluate(expr);
+                        mathOperations.push(`${expr} = ${result}`);
+                    } catch (err) {
+                        // Ошибка не выводится
+                    }
+                }
+            });
+        }
+    } catch (err) {
+        mathOperations.push('Ошибка при использовании math.js');
+    }
+
+    if (mathOperations.length > 0) {
+        operations.push('С использованием math.js:\n' + mathOperations.join('\n'));
+    }
+
+    // Если не было найдено операций, возвращаем сообщение
+    if (operations.length === 0) {
         return `Арифметические операции не были найдены в файле ${fileName}`;
     }
-        return operations.join('\n');
-    }
+
+    return operations.join('\n');
+}
+
+// Подключаем библиотеку math.js для выполнения вычислений
+function loadMathJS() {
+    const script = document.createElement('script');
+    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjs/10.7.3/math.min.js';
+    document.head.appendChild(script);
+}
+
+// Вызываем функцию загрузки библиотеки math.js
+loadMathJS();
+
+
     
-    
 
 
 
 
-    
+
 
     // Скачивание обработанного файла
     downloadButton.addEventListener('click', () => {
