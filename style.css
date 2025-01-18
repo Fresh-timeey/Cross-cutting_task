@@ -376,6 +376,8 @@ button:hover {
 
 
 .download-container {
+
+ 
     display: flex;
     align-items: center;
     position: relative;
@@ -389,6 +391,7 @@ button:hover {
     border: none;
     border-radius: 5px 0 0 5px; /* Округление левой части кнопки */
     cursor: pointer;
+    flex-grow: 1; /* Этот параметр растянет кнопку на всю доступную ширину */
 }
 
 #formatButton {

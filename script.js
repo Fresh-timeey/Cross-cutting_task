@@ -414,7 +414,7 @@ loadMathJS();
 
 
 
-
+//СКАЧИВАНИЕ
 const downloadButton = document.getElementById('downloadButton'); // Кнопка скачивания
     const formatButton = document.getElementById('formatButton'); // Кнопка открытия меню
     const menuOptions = document.getElementById('menuOptions'); // Меню форматов
