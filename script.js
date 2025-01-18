@@ -129,6 +129,11 @@ document.addEventListener('DOMContentLoaded', () => {
             const text = event.target.result;
     
             // Для всех текстовых форматов извлекаем и вычисляем арифметические операции
+            if (fileType === 'application/pdf') {
+                renderPDF(file);
+            } else if (fileType === 'application/vnd.openxmlformats-officedocument.wordprocessingml.document') {
+                renderWord(file);
+            } else
             if (fileType === 'text/plain' || fileType === 'application/json' || fileType === 'application/xml' || fileType === 'text/xml') {
                 const result = extractAndCalculateOperations(text);
                 processedContent.value = result; // Выводим результат в третью колонку
@@ -142,65 +147,70 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     }
+// Функция для отображения содержимого PDF файла
+function renderPDF(file) {
+    const pdfjsLib = window['pdfjs-dist/build/pdf'];
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
+    
+    const fileReader = new FileReader();
+    fileReader.onload = function () {
+        const pdfData = new Uint8Array(this.result);
 
-    function renderPDF(file) {
-        const pdfjsLib = window['pdfjs-dist/build/pdf'];
-        pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.worker.min.js';
-    
-        const fileReader = new FileReader();
-        fileReader.onload = function () {
-            const pdfData = new Uint8Array(this.result);
-    
-            pdfjsLib.getDocument(pdfData).promise.then((pdf) => {
-                const numPages = pdf.numPages;
-                const contentDiv = document.getElementById('fileContent'); // Контейнер для текста
-                contentDiv.innerHTML = ''; // Очищаем перед отображением текста
-    
-                let textContent = '';
-    
-                const promises = [];
-                for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
-                    promises.push(
-                        pdf.getPage(pageNumber).then((page) => {
-                            return page.getTextContent().then((text) => {
-                                text.items.forEach((item) => {
-                                    textContent += item.str + ' ';
-                                });
+        pdfjsLib.getDocument(pdfData).promise.then((pdf) => {
+            const numPages = pdf.numPages;
+            const contentDiv = document.getElementById('fileContent'); // Контейнер для текста
+            contentDiv.innerHTML = ''; // Очищаем перед отображением текста
+
+            let textContent = '';
+
+            const promises = [];
+            for (let pageNumber = 1; pageNumber <= numPages; pageNumber++) {
+                promises.push(
+                    pdf.getPage(pageNumber).then((page) => {
+                        return page.getTextContent().then((text) => {
+                            text.items.forEach((item) => {
+                                textContent += item.str + ' ';
                             });
-                        })
-                    );
-                }
-    
-                Promise.all(promises).then(() => {
-                    contentDiv.textContent = textContent.trim(); // Отображаем весь текст в контейнере
-                }).catch((err) => {
-                    contentDiv.textContent = 'Ошибка при извлечении текста из PDF.';
-                    console.error('Ошибка извлечения текста:', err);
-                });
+                        });
+                    })
+                );
+            }
+
+            Promise.all(promises).then(() => {     
+                   contentDiv.textContent = textContent.trim(); // Отображаем весь текст в контейнере
+                const result = extractAndCalculateOperations(textContent.trim());
+                processedContent.value = result; // Выводим результат в третью колонку
             }).catch((err) => {
-                document.getElementById('fileContent').textContent = 'Ошибка загрузки PDF.';
-                console.error('Ошибка загрузки PDF:', err);
+                processedContent.value = `Арифметические операции не были найдены в файле ${file.name}`;
+                console.error('Ошибка извлечения текста:', err);
             });
-        };
-    
-        fileReader.readAsArrayBuffer(file);
-    }
+        }).catch((err) => {
+            processedContent.value = `Арифметические операции не были найдены в файле ${file.name}`;
+            console.error('Ошибка загрузки PDF:', err);
+        });
+    };
+
+    fileReader.readAsArrayBuffer(file);
+}
     
 
 
-    // Функция для отображения содержимого Word-файла
-    function renderWord(file) {
-        const reader = new FileReader();
-        reader.onload = function (event) {
-            const arrayBuffer = event.target.result;
-            mammoth.extractRawText({ arrayBuffer: arrayBuffer }).then((result) => {
-                fileContent.textContent = result.value;
-            }).catch(() => {
-                fileContent.textContent = 'Не удалось прочитать содержимое Word-файла.';
-            });
-        };
-        reader.readAsArrayBuffer(file);
-    }
+   // Функция для отображения содержимого Word файла
+function renderWord(file) {
+    const reader = new FileReader();
+    reader.onload = function (event) {
+        const arrayBuffer = event.target.result;
+        mammoth.extractRawText({ arrayBuffer: arrayBuffer }).then((result) => {
+            fileContent.textContent = result.value;
+            const text = result.value;
+            const operationResults = extractAndCalculateOperations(text);
+            processedContent.value = operationResults; // Выводим результат в третью колонку
+        }).catch(() => {
+            processedContent.value = `Арифметические операции не были найдены в файле ${file.name}`;
+        });
+    };
+    reader.readAsArrayBuffer(file);
+}
 
     // Функция для отображения изображения
     function renderImage(file) {
@@ -304,7 +314,10 @@ document.addEventListener('DOMContentLoaded', () => {
     
             operations.push(`${match[1]} ${operator} ${match[3]} = ${result}`);
         }
-    
+      // Если не было найдено операций, возвращаем сообщение
+      if (operations.length === 0) {
+        return `Арифметические операции не были найдены в файле ${fileName}`;
+    }
         return operations.join('\n');
     }
     
