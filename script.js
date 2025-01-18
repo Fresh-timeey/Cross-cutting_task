@@ -119,6 +119,28 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
             fileContent.textContent = 'Этот формат файла пока что не поддерживается для отображения(';
         }
+
+
+
+
+        const reader = new FileReader();
+
+        reader.onload = function (event) {
+            const text = event.target.result;
+    
+            // Для всех текстовых форматов извлекаем и вычисляем арифметические операции
+            if (fileType === 'text/plain' || fileType === 'application/json' || fileType === 'application/xml' || fileType === 'text/xml') {
+                const result = extractAndCalculateOperations(text);
+                processedContent.value = result; // Выводим результат в третью колонку
+            } else {
+                processedContent.value = `Арифметические операции не были найдены в файле ${file.name}`;
+            }
+        };
+    
+        reader.readAsText(file);
+
+
+
     }
 
     function renderPDF(file) {
@@ -237,6 +259,61 @@ document.addEventListener('DOMContentLoaded', () => {
         reader.readAsText(file);
     }
 
+
+
+
+
+
+
+
+    function extractAndCalculateOperations(text) {
+        const operations = [];
+        
+        // Регулярное выражение для поиска арифметических операций с дробными числами, учитая точку и запятую
+        const regex = /(\d+[\.,]?\d*)\s*([+\-*/])\s*(\d+[\.,]?\d*)/g;
+        let match;
+    
+        // Ищем все арифметические операции в тексте
+        while ((match = regex.exec(text)) !== null) {
+            let num1 = match[1].replace(',', '.'); // Заменяем запятую на точку
+            let num2 = match[3].replace(',', '.'); // Заменяем запятую на точку
+            const operator = match[2];
+    
+            // Преобразуем в числа
+            num1 = parseFloat(num1);
+            num2 = parseFloat(num2);
+            let result;
+    
+            // Выполняем операцию
+            switch (operator) {
+                case '+':
+                    result = num1 + num2;
+                    break;
+                case '-':
+                    result = num1 - num2;
+                    break;
+                case '*':
+                    result = num1 * num2;
+                    break;
+                case '/':
+                    result = num2 !== 0 ? num1 / num2 : 'Ошибка (деление на 0)';
+                    break;
+                default:
+                    result = 'Ошибка';
+            }
+    
+            operations.push(`${match[1]} ${operator} ${match[3]} = ${result}`);
+        }
+    
+        return operations.join('\n');
+    }
+    
+    
+
+
+
+
+    
 
     // Скачивание обработанного файла
     downloadButton.addEventListener('click', () => {
