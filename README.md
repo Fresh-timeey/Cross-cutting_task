@@ -18,12 +18,10 @@
 9. Запуск веб-сервиса (REST)
 
 ## Используемые технологии и паттерны:
-- **Design Patterns**: Abstract Factory, Decorator, Singleton
-- **Форматы файлов**: plain text, XML, JSON, YAML, PDF, docs(Word-document)
-- -**Архивы**: ZIP
-- **Библиотеки**:
-- **Шифрование**: 
-- **Тестирование**: Jest
+- ## Design Patterns: Abstract Factory, Decorator, Singleton
+- ## Форматы файлов: plain text, XML, JSON, YAML, PDF, docs(Word-document)
+- ## Архивы: ZIP
+- ## Тестирование: Jest
 
 
 ## Монолит
